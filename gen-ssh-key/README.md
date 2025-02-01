@@ -7,7 +7,7 @@ gen-ssh-key NAME HOST
 ```
 
 Arguments:\
-`NAME` - Name for key file to idetify it. E.g. "github" will generate files "id_ed25519.github" and "id_ed25519.github.pub"
+`NAME` - Name for key file to idetify it. E.g. "github" will generate files "id_ed25519.github" and "id_ed25519.github.pub"\
 `HOST` - SSH host. E.g. "github.com"
 
 Example:
