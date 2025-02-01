@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+NAME=$1     # Name for key file to idetify it. E.g. "github" will generate files "id_ed25519.github" and "id_ed25519.github.pub"
+HOST=$2     # SSH host. E.g. "github.com"
+
+DEFULT_TYPE="ed25519"
+
+FILE_NAME="id_$DEFULT_TYPE"
+PATH_TO_KEY="$HOME/.ssh/$FILE_NAME.$NAME"
+PATH_TO_PUB_KEY="$PATH_TO_KEY.pub"
+
+ssh-keygen -t $DEFULT_TYPE -f "$PATH_TO_KEY" -N ""
+
+# Copy key to clipboard
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    # Works for X Window System, doesn't work for Wayland
+    cat $PATH_TO_PUB_KEY | xclip -sel clip
+    echo "Public key copied to clipboard"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    # If MacOS X
+    cat $PATH_TO_PUB_KEY | pbcopy
+    echo "Public key copied to clipboard"
+else
+    echo "Generated public key:"
+    cat $PATH_TO_PUB_KEY
+fi
+
+# Add record to config file (create if not exists)
+CONFIG_FILE="$HOME/.ssh/config"
+
+echo "Host $HOST" >> $CONFIG_FILE
+echo "    Hostname $HOST" >> $CONFIG_FILE
+echo "    IdentityFile $PATH_TO_PUB_KEY" >> $CONFIG_FILE
+echo "    IdentitiesOnly yes" >> $CONFIG_FILE
+echo "    AddKeysToAgent yes" >> $CONFIG_FILE
+echo "    PreferredAuthentications publickey" >> $CONFIG_FILE
