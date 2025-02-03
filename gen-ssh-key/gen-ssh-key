@@ -30,7 +30,7 @@ CONFIG_FILE="$HOME/.ssh/config"
 
 echo "Host $HOST" >> $CONFIG_FILE
 echo "    Hostname $HOST" >> $CONFIG_FILE
-echo "    IdentityFile $PATH_TO_PUB_KEY" >> $CONFIG_FILE
+echo "    IdentityFile $PATH_TO_KEY" >> $CONFIG_FILE
 echo "    IdentitiesOnly yes" >> $CONFIG_FILE
 echo "    AddKeysToAgent yes" >> $CONFIG_FILE
 echo "    PreferredAuthentications publickey" >> $CONFIG_FILE
