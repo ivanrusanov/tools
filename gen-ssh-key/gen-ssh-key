@@ -1,15 +1,20 @@
 #!/usr/bin/env bash
 
-NAME=$1     # Name for key file to idetify it. E.g. "github" will generate files "id_ed25519.github" and "id_ed25519.github.pub"
-HOST=$2     # SSH host. E.g. "github.com"
+IN_NAME=$1     # Name for key file to idetify it. E.g. "github" will generate files "id_ed25519.github" and "id_ed25519.github.pub"
+IN_HOST=$2     # SSH host. E.g. "github.com"
+IN_KEY_TYPE=$3 # Type of key. Optional. Default value is ed25519
 
-DEFULT_TYPE="ed25519"
+KEY_TYPE="ed25519"
 
-FILE_NAME="id_$DEFULT_TYPE"
-PATH_TO_KEY="$HOME/.ssh/$FILE_NAME.$NAME"
+if [[ -n "$IN_KEY_TYPE" ]]; then
+    KEY_TYPE=$IN_KEY_TYPE
+fi
+
+FILE_NAME="id_$KEY_TYPE"
+PATH_TO_KEY="$HOME/.ssh/$FILE_NAME.$IN_NAME"
 PATH_TO_PUB_KEY="$PATH_TO_KEY.pub"
 
-ssh-keygen -t $DEFULT_TYPE -f "$PATH_TO_KEY" -N ""
+ssh-keygen -t $KEY_TYPE -f "$PATH_TO_KEY" -N ""
 
 # Copy key to clipboard
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
@@ -28,8 +33,8 @@ fi
 # Add record to config file (create if not exists)
 CONFIG_FILE="$HOME/.ssh/config"
 
-echo "Host $HOST" >> $CONFIG_FILE
-echo "    Hostname $HOST" >> $CONFIG_FILE
+echo "Host $IN_HOST" >> $CONFIG_FILE
+echo "    Hostname $IN_HOST" >> $CONFIG_FILE
 echo "    IdentityFile $PATH_TO_KEY" >> $CONFIG_FILE
 echo "    IdentitiesOnly yes" >> $CONFIG_FILE
 echo "    AddKeysToAgent yes" >> $CONFIG_FILE
