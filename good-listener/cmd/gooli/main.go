@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/ivanrusanov/tools/good-listener/internal"
 )
@@ -33,6 +34,10 @@ func readInput() args {
 
 	flag.Parse()
 
+	if len(endpoints) < 1 {
+		endpoints = append(endpoints, "/")
+	}
+
 	if err := internal.CheckPortCorrect(*port); err != nil {
 		log.Fatal(err)
 	}
@@ -54,7 +59,8 @@ func main() {
 		http.HandleFunc(ep, internal.LoggingHandler)
 	}
 
-	log.Printf("Starting server on port %d...", input.port)
+	log.Println("Listening on port ", input.port)
+	log.Println("Endpoints: ", strings.Join(input.endpoints, ", "))
 
 	err := http.ListenAndServe(fmt.Sprintf(":%d", input.port), nil)
 	if err != nil {
